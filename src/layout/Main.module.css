@@ -1,0 +1,9 @@
+.main {
+    display: inline-block;
+    border: 1px solid #243b39;
+    padding: 10px;
+    width: 45%;
+    margin: 30px;
+    background-color: #f2f6f6;
+
+}
