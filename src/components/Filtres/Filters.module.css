@@ -1,0 +1,49 @@
+.extendedSearch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.extended {
+    background-color: #243b39;
+    color: white;
+    padding: 10px;
+    border: none;
+    margin-top: 20px;
+}
+
+.extended:active {
+    background-color: #035959;
+}
+
+.box {
+    display: none;
+
+}
+
+.toggleCheckbox:checked + .box {
+    display: flex;
+    border: 1px solid #06b4b4;
+    background-color: #fafdfd;
+    margin-top: 14px;
+    margin-bottom: -5px;
+
+    padding: 30px;
+    text-align: left;
+
+}
+
+.toggleCheckbox {
+    display: none;
+}
+
+
+.expanded {
+    display: flex;
+}
+
+
+
+
+
