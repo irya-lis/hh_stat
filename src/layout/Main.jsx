@@ -3,33 +3,45 @@ import Vacancies from "../components/Vacancies/Vacancies";
 import style from "./Main.module.css"
 import Search from "../components/Search/Search";
 import Loading from "../components/Loading/Loading";
+import Filters from "../components/Filtres/Filters";
+import Statistics from "../components/Statistics/Statistics";
 
 const Main = () => {
-    let [state, setState] = useState({
-        vacancies: []
-    });
-    const {vacancies} = state;
+    const [vacancies, setVacancies] = useState([]);
+    const [statistics, setStatistics] = useState([]);
+
     const [isLoading, setIsLoading] = useState(true);
 
 
     useEffect(() => {
-        fetch('https://api.hh.ru/vacancies?text=react')
+        fetch('https://api.hh.ru/vacancies')
             .then(response => response.json())
             .then(data => {
-                setState(prevState => ({...prevState, vacancies: data.items}));
+                setVacancies(data.items);
                 setIsLoading(false);
             });
+
+
+
+        fetch('https://api.hh.ru/dictionaries')
+            .then(response => response.json())
+            .then(data => {
+                setStatistics(data.experience)
+            });
+
     }, []);
 
     const searchVacancies = (str) => {
         fetch(`https://api.hh.ru/vacancies?text=${str}`)
             .then(response => response.json())
-            .then(data => setState(prevState => ({...prevState, vacancies: data.items})))
+            .then(data => setVacancies(data.items))
     }
 
     return (
         <>
             <Search searchVacancies={searchVacancies}/>
+            <Filters/>
+            <Statistics statistics={statistics}/>
             <main className={style.main}>
                 {isLoading ? (
                     <Loading/>

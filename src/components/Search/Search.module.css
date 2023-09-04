@@ -1,4 +1,3 @@
-
 .button {
     background-color: #243b39;
     color: aliceblue;
@@ -6,13 +5,15 @@
     border: 1px solid #243b39;
 }
 
+.button:active {
+    background-color: #035959;
+}
+
 .input {
     display: inline-block;
     border: 1px solid #243b39;
     padding: 10px;
     width: 35%;
-
-
 }
 
 .input:focus {
@@ -20,4 +21,6 @@
     border-color: #10c4c4;
     background-color: #fafdfd;
 }
+
+
 
