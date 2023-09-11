@@ -1,0 +1,14 @@
+.pagination {
+padding: 10px;
+}
+
+.btn {
+    background-color: #033a3a;
+    color: #daf5f5;
+    border: 1px solid #243b39;
+    margin: 10px;
+}
+
+.btn:hover {
+    background-color: #0a6b6b;
+}

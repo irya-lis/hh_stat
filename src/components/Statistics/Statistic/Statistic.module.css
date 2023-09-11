@@ -5,5 +5,10 @@
     width: 50%;
     border: 1px solid black;
     background-color: #fafdfd;
+    text-align: left;
 
+}
+
+.statisticList span {
+    margin-left: 10%;
 }
