@@ -1,17 +1,23 @@
-import React, {useState} from "react";
-import style from "./Search.module.css"
+import React, { useState } from "react";
+import style from "./Search.module.css";
 
-const Search = (props) => {
-    const [searchQuery, setSearchQuery] = useState("");
+const Search = ({ searchVacancies }) => {
+    const [searchTerm, setSearchTerm] = useState("");
 
     const handleKey = (event) => {
         if (event.key === 'Enter') {
-            props.searchVacancies(searchQuery);
+            performSearch();
+
         }
     };
 
     const handleChange = (event) => {
-        setSearchQuery(event.target.value);
+        setSearchTerm(event.target.value);
+    };
+
+    const performSearch = () => {
+        searchVacancies(searchTerm);
+        // setSearchTerm(""); // Очищ поле ввода после поиска
     };
 
     return (
@@ -20,12 +26,13 @@ const Search = (props) => {
                 className={style.input}
                 type="text"
                 placeholder="Поиск"
+                value={searchTerm}
                 onChange={handleChange}
                 onKeyDown={handleKey}
             />
             <button
                 className={style.button}
-                onClick={() => props.searchVacancies(searchQuery)}
+                onClick={performSearch}
             >
                 Отправить
             </button>

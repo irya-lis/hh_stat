@@ -1,7 +1,7 @@
 import React from "react";
 import style from "./Pagination.module.css";
 
-const Paginator = ({ totalPages, paginate, nextPage, prevPage, vacancyPage, id }) => {
+const Paginator = ({ totalPages, paginate, nextPage, prevPage, vacancyPage }) => {
 
     // Генерация списка номеров страниц для пагинатора
     const generatePageNumbers = () => {
@@ -38,6 +38,7 @@ const Paginator = ({ totalPages, paginate, nextPage, prevPage, vacancyPage, id }
         return pageNumbers;
     };
 
+
     return (
         <div className={style.pagination}>
             <button className={style.btn} onClick={prevPage}>
@@ -45,7 +46,6 @@ const Paginator = ({ totalPages, paginate, nextPage, prevPage, vacancyPage, id }
             </button>
             {generatePageNumbers().map((pageNumber) => (
                 <button
-                    key={id}
                     className={style.btn}
                     onClick={() => paginate(pageNumber)}
                     disabled={pageNumber === "..." || pageNumber === vacancyPage}
@@ -53,6 +53,7 @@ const Paginator = ({ totalPages, paginate, nextPage, prevPage, vacancyPage, id }
                     {pageNumber}
                 </button>
             ))}
+
             <button className={style.btn} onClick={nextPage}>
                 Next page
             </button>

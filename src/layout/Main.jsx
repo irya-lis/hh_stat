@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import Vacancies from "../components/Vacancies/Vacancies";
 import style from "./Main.module.css";
 import Search from "../components/Search/Search";
@@ -10,24 +10,26 @@ import Paginator from "../components/Pagination/Pagination";
 const Main = () => {
     const [vacancies, setVacancies] = useState([]);
     const [statistics, setStatistics] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [vacanciesStat, setVacanciesStat] = useState("");
     const [vacancyPage, setVacancyPage] = useState(0);
-    const [vacanciesPerPage] = useState(20);
+    const [vacanciesPerPage] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
 
-
-    const [noExperienceStatistics, setNoExperienceStatistics] = useState([0]);
-    const [between1And3, setBetween1And3] = useState([0]);
-    const [between3And6, setBetween3And6] = useState([0]);
-    const [moreThan6, setMoreThan6] = useState([0]);
-
+    const [noExperience, setNoExperience] = useState(0);
+    const [between1And3, setBetween1And3] = useState(0);
+    const [between3And6, setBetween3And6] = useState(0);
+    const [moreThan6, setMoreThan6] = useState(0);
+    const [searched, setSearched] = useState(false); //  состояние для отслеживания выполненного поиска
 
     useEffect(() => {
-        // Функция для выполнения запроса и обновления вакансий
         const fetchVacancies = () => {
-            debugger;
-            fetch(`https://api.hh.ru/vacancies?text=${vacanciesStat}&page=${vacancyPage}&per_page=${vacanciesPerPage}`)
+            setIsLoading(true);
+            setSearched(true); //  поиск выполнен
+
+            fetch(
+                `https://api.hh.ru/vacancies?text=${vacanciesStat}&page=${vacancyPage}&per_page=${vacanciesPerPage}`
+            )
                 .then((response) => response.json())
                 .then((data) => {
                     setVacancies(data.items);
@@ -36,45 +38,19 @@ const Main = () => {
                 });
         };
 
-        // Выполняем запрос к API с пустой строкой в vacanciesStat для получения всех вакансий
-        setVacanciesStat("");
+        const fetchStatistics = () => {
+            fetch("https://api.hh.ru/dictionaries")
+                .then((response) => response.json())
+                .then((data) => {
+                    setStatistics(data.experience);
+                });
+        };
 
-        // Выполняем запрос к API при загрузке страницы
-        fetchVacancies();
-
-        fetch("https://api.hh.ru/dictionaries")
-            .then((response) => response.json())
-            .then((data) => {
-                setStatistics(data.experience);
-            });
-
-         // опыт
-        fetch("https://api.hh.ru/vacancies?text=noExperience")
-            .then((response) => response.json())
-            .then((data) => {
-                setNoExperienceStatistics(data.found)
-            });
-
-        fetch("https://api.hh.ru/vacancies?text=between1And3")
-            .then((response) => response.json())
-            .then((data) => {
-                setBetween1And3(data.found)
-            });
-
-        fetch("https://api.hh.ru/vacancies?text=between3And6")
-            .then((response) => response.json())
-            .then((data) => {
-                setBetween3And6(data.found)
-            });
-
-        fetch("https://api.hh.ru/vacancies?text=moreThan6")
-            .then((response) => response.json())
-            .then((data) => {
-                setMoreThan6(data.found)
-            });
-
-
-    }, [vacancyPage, vacanciesPerPage]);
+        if (vacanciesStat !== "") {
+            fetchVacancies();
+            fetchStatistics();
+        }
+    }, [vacancyPage, vacanciesPerPage, vacanciesStat]);
 
     const currentVacancies = vacancies;
 
@@ -95,7 +71,9 @@ const Main = () => {
     };
 
     const searchVacancies = (str) => {
-        // Функция для выполнения поиска по заданной строке
+        setVacanciesStat(str);
+        setSearched(false); // Сбрасываю флаг выполненного поиска при новом запросе
+
 
         fetch(`https://api.hh.ru/vacancies?text=${str}&page=1&per_page=${vacanciesPerPage}`)
             .then((response) => response.json())
@@ -105,38 +83,68 @@ const Main = () => {
                 setTotalPages(data.pages);
                 setVacancyPage(1);
             });
+
+        fetch(`https://api.hh.ru/vacancies?text=${str}&experience=noExperience`)
+            .then((response) => response.json())
+            .then((data) => {
+                setNoExperience(data.found);
+            });
+
+        fetch(`https://api.hh.ru/vacancies?text=${str}&experience=between1And3`)
+            .then((response) => response.json())
+            .then((data) => {
+                setBetween1And3(data.found);
+            });
+
+        fetch(`https://api.hh.ru/vacancies?text=${str}&experience=between3And6`)
+            .then((response) => response.json())
+            .then((data) => {
+                setBetween3And6(data.found);
+            });
+
+        fetch(`https://api.hh.ru/vacancies?text=${str}&experience=moreThan6`)
+            .then((response) => response.json())
+            .then((data) => {
+                setMoreThan6(data.found);
+            });
     };
-
-
 
     return (
         <>
-            <Search searchVacancies={searchVacancies}/>
-            <Filters/>
-            <Statistics statistics={statistics}
-                        vacancies={currentVacancies}
-                        noExperienceStatistics={noExperienceStatistics}
-                        between1And3={between1And3}
-                        between3And6={between3And6}
-                        moreThan6={moreThan6}
+            <Search searchVacancies={searchVacancies} />
+            <Filters />
+            <Statistics
+                searchVacancies={searchVacancies}
+                statistics={statistics}
+                vacancies={currentVacancies}
+                noExperience={noExperience}
+                between1And3={between1And3}
+                between3And6={between3And6}
+                moreThan6={moreThan6}
             />
             <div className={style.main}>
                 {isLoading ? (
-                    <Loading/>
-                ) : currentVacancies && currentVacancies.length ? (
-                    <Vacancies vacancies={currentVacancies}/>
+                    <Loading />
+                ) : searched ? (
+                    currentVacancies && currentVacancies.length ? (
+                        <>
+                            <Vacancies vacancies={currentVacancies} />
+                            <Paginator
+                                totalPages={totalPages}
+                                vacanciesPerPage={vacanciesPerPage}
+                                paginate={paginate}
+                                nextPage={nextPage}
+                                prevPage={prevPage}
+                                vacancyPage={vacancyPage}
+                            />
+                        </>
+                    ) : (
+                        <h3>No vacancies found.</h3>
+                    )
                 ) : (
-                    <h3>No vacancies found.</h3>
+                    <h5>hh statistics</h5> //  при первоначальной загрузке
                 )}
             </div>
-            <Paginator
-                totalPages={totalPages}
-                vacanciesPerPage={vacanciesPerPage}
-                paginate={paginate}
-                nextPage={nextPage}
-                prevPage={prevPage}
-                vacancyPage={vacancyPage}
-            />
         </>
     );
 };

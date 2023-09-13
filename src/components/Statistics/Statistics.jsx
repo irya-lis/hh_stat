@@ -3,7 +3,7 @@ import style from "./Statistics.module.css";
 import Statistic from "./Statistic/Statistic";
 
 const Statistics = (props) => {
-    const {statistics, noExperienceStatistics, between1And3, between3And6, moreThan6} = props;
+    const {statistics, noExperience, between1And3, between3And6, moreThan6} = props;
 
     return (
         <div className={style.statistic}>
@@ -12,7 +12,11 @@ const Statistics = (props) => {
                     <Statistic
                         key={statistic.id}
                         {...statistic}
-                        found={noExperienceStatistics}
+                        noExperience={noExperience}
+                        between1And3={between1And3}
+                        between3And6={between3And6}
+                        moreThan6={moreThan6}
+
                     /> : null
 
                 ))}
@@ -21,3 +25,5 @@ const Statistics = (props) => {
 }
 
 export default Statistics;
+
+
