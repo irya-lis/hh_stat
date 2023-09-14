@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import style from "./Search.module.css";
 
-const Search = ({ searchVacancies }) => {
+const Search = ({searchVacancies}) => {
     const [searchTerm, setSearchTerm] = useState("");
 
     const handleKey = (event) => {
@@ -17,8 +17,11 @@ const Search = ({ searchVacancies }) => {
 
     const performSearch = () => {
         searchVacancies(searchTerm);
-        // setSearchTerm(""); // Очищ поле ввода после поиска
     };
+
+    const clearInp = () => {
+        setSearchTerm(""); // Очищ поле ввода
+    }
 
     return (
         <div className={style.form}>
@@ -29,13 +32,13 @@ const Search = ({ searchVacancies }) => {
                 value={searchTerm}
                 onChange={handleChange}
                 onKeyDown={handleKey}
+
             />
-            <button
-                className={style.button}
-                onClick={performSearch}
-            >
-                Отправить
-            </button>
+
+
+
+                <button className={`${style.clearInp} ${style.hintBottom}`} data-hint="Очистить" onClick={clearInp}>X</button>
+            <button className={style.button} onClick={performSearch}>Отправить</button>
         </div>
     );
 };
